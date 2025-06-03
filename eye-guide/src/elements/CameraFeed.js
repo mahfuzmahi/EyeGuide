@@ -13,8 +13,8 @@ function CameraFeed() {
                     audio: false
                 })
 
-                if(videoRef.temp) {
-                    videoRef.temp.srcObject = streamCamera;
+                if(videoRef.current) {
+                    videoRef.current.srcObject = streamCamera;
                 }
             } catch(error) {
                 console.log("Unable to access camera", error);
@@ -22,7 +22,7 @@ function CameraFeed() {
             }
         };
         startCamera(); 
-    });
+    }, []);
 
     return (
         <video
