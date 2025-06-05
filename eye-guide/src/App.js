@@ -25,19 +25,13 @@ function App() {
     }, []);
 
     return (
-        <video>
-            ref = {videoCam}
+        <video
+            ref={videoCam}
             autoPlay
-            playsInLine
-
-            style = {{
-                width: '100vw',
-                height: '100vh',
-                objectFit: 'cover',
-                display: 'block'
-            }}
-        </video>
-    );
+            playsInline
+            style= {{width: '100vw', height: '100vh', objectFit: 'cover',display: 'block'}}
+        />
+    )
 }
 
 export default App;
