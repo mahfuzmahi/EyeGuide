@@ -48,8 +48,14 @@ function App() {
             };
             runDetect();
         }
+
+        const checkReady = setInterval(() => {
+            if(videoCam.current && videoCam.current.readyState === 4) {
+                detectObject();
+                clearInterval(checkReady);
+            }
+        });
         startCam();
-        detectObject();
     }, []);
 
     return (
