@@ -30,26 +30,26 @@ function App() {
             console.log("Model has ran successfully");
 
             const runDetect = async () => {
-                if(videoCam.current && detectModel) {
+                if(videoCam.current && canvasCam.current) {
                     const detectedObjects = await detectModel.detect(videoCam.current);
-                };
+                    const context = canvasCam.current.getContext("2d");
 
-                const canvas = canvasCam.current;
-                const context = canvas.getContext("2d");
+                    context.clearRect(0, 0, videoCam.current.videoWidth, videoCam.current.videoHeight);
 
-                context.clearRect(0, 0, videoCam.current.videoWidth, videoCam.current.videoHeight);
+                    detectedObjects.forEach((o) => {
+                        const [x, y, w, h] = o.bbox;
 
-                detectedObjects.forEach((o) => {
-                    const [x, y, w, h] = o.bbox;
-
-                    context.strokeStyle = "green";
-                    context.lineWidth = 2;
-                    context.strokeRect(x, y, w, h);
-                });
-                objectFrame(runDetect);
-            }
-        };
+                        context.strokeStyle = "green";
+                        context.lineWidth = 2;
+                        context.strokeRect(x, y, w, h);
+                    });
+                }
+                requestAnimationFrame(runDetect);
+            };
+            runDetect();
+        }
         startCam();
+        detectObject();
     }, []);
 
     return (
