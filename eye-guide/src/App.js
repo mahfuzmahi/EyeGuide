@@ -89,12 +89,23 @@ function App() {
             ref={videoCam}
             autoPlay
             playsInline
-            style = {{width: '100vw', height: '100vh', objectFit: 'cover', display: 'block'}}
+            style = {{
+                width: '100vw', 
+                height: '100vh', 
+                objectFit: 'cover', 
+                display: 'block'
+            }}
         />
         
         <canvas
             ref={canvasCam}
-            style = {{width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0}}
+            style = {{
+                width: '100vw', 
+                height: '100vh', 
+                position: 'absolute', 
+                top: 0, 
+                left: 0
+            }}
         />
         </>
     );
