@@ -5,6 +5,7 @@ import * as tf from "@tensorflow/tfjs";
 function App() {
     const videoCam = useRef(null);
     const canvasCam = useRef(null);
+    const wordsUsed = useRef(new Set());
 
     useEffect(() => {
         const startCam = async () => {
@@ -26,11 +27,21 @@ function App() {
         };
 
         const speakObject = async (text) => {
+            if(wordsUsed.current.has(text)) {
+                return;
+            }
+
+            wordsUsed.current.add(text);
+
             const synth = window.speechSynthesis;
             const utter = new SpeechSynthesisUtterance(text);
             utter.rate = 1;
             synth.speak(utter);
-        }
+
+            setTimeout(() => {
+                wordsUsed.current.delete(text);
+            }, 3000);
+        };
 
         const detectObject = async () => {
             await tf.setBackend("webgl");
