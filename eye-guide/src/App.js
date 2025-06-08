@@ -59,10 +59,12 @@ function App() {
 
                     detectedObjects.forEach((o) => {
                         const [x, y, w, h] = o.bbox;
+                        const label = y + 10;
 
                         context.strokeStyle = "green";
                         context.lineWidth = 2;
                         context.strokeRect(x, y, w, h);
+                        context.fillText(o.class, x, label);
 
                         speakObject(o.class);
                     });
