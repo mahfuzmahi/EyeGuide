@@ -25,7 +25,17 @@ function App() {
             }
         };
 
+        const speakObject = async (text) => {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.rate = 1;
+            synth.speak(utter);
+        }
+
         const detectObject = async () => {
+            await tf.setBackend("webgl");
+            await tf.ready();
+
             const detectModel = await cocoSsd.load();
             console.log("Model has ran successfully");
 
@@ -42,18 +52,13 @@ function App() {
                         context.strokeStyle = "green";
                         context.lineWidth = 2;
                         context.strokeRect(x, y, w, h);
+
+                        speakObject(o.class);
                     });
                 }
                 requestAnimationFrame(runDetect);
             };
             runDetect();
-        }
-
-        const speakObject = async (text) => {
-            const synth = window.SpeechSynthesis;
-            const utter = new SpeechSynthesis(text);
-            utter.rate = 1;
-            synth.speakObject(utter);
         }
 
         const checkReady = setInterval(() => {
