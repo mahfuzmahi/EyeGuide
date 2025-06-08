@@ -49,6 +49,13 @@ function App() {
             runDetect();
         }
 
+        const speakObject = async (text) => {
+            const synth = window.SpeechSynthesis;
+            const utter = new SpeechSynthesis(text);
+            utter.rate = 1;
+            synth.speakObject(utter);
+        }
+
         const checkReady = setInterval(() => {
             if(videoCam.current && videoCam.current.readyState === 4) {
                 detectObject();
