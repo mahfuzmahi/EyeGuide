@@ -43,6 +43,30 @@ function App() {
             }, 3000);
         };
 
+        const directionFacing = async (event) => {
+            const head = event.alpha;
+
+            if(head != null) {
+                let arrow = "";
+
+                if(head < 45 || head >= 315) {
+                    arrow = "You are facing North";
+                } else if (head < 135) {
+                    arrow = "You are facing East";
+                } else if(head > 225) {
+                    arrow = "You are facing South";
+                } else {
+                    arrow = "You are facing West";
+                }
+            }
+
+            speakObject(arrow, 0, 0);
+        };
+
+        if(window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", directionFacing, true);
+        }
+
         const detectObject = async () => {
             await tf.setBackend("webgl");
             await tf.ready();
