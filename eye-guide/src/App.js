@@ -7,6 +7,7 @@ function App() {
     const canvasCam = useRef(null);
     const wordsUsed = useRef(new Set());
     const [currentDirection, setdirectionFacing] = useState("");
+    const lastDirection = useState("");
 
     useEffect(() => {
         const startCam = async () => {
@@ -59,8 +60,14 @@ function App() {
                 } else {
                     arrow = "West";
                 }
-                setdirectionFacing(`You are currently facing ${arrow}`);
-                speakObject(`You are currently facing ${arrow}`);
+                
+                const directionMessage = `You are currently facing ${arrow}`;
+
+                if(lastDirection.current !== directionMessage) {
+                    setdirectionFacing(directionMessage);
+                    speakObject(directionMessage, true);
+                    lastDirection.current = directionMessage;
+                }
             }
         };
 
