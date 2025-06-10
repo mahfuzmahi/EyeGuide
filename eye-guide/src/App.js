@@ -7,7 +7,7 @@ function App() {
     const canvasCam = useRef(null);
     const wordsUsed = useRef(new Set());
     const [currentDirection, setdirectionFacing] = useState("");
-    const lastDirection = useState("");
+    const lastDirection = useRef("");
 
     useEffect(() => {
         const startCam = async () => {
@@ -45,7 +45,7 @@ function App() {
             }, 3000);
         };
 
-        const directionFacing = async (event) => {
+        const directionFacing = (event) => {
             const head = event.alpha;
 
             if(head != null) {
@@ -65,15 +65,11 @@ function App() {
 
                 if(lastDirection.current !== directionMessage) {
                     setdirectionFacing(directionMessage);
-                    speakObject(directionMessage, true);
+                    speakObject(directionMessage);
                     lastDirection.current = directionMessage;
                 }
             }
         };
-
-        if(window.DeviceOrientationEvent) {
-            window.addEventListener("deviceorientation", directionFacing, true);
-        }
 
         const detectObject = async () => {
             await tf.setBackend("webgl");
@@ -104,6 +100,10 @@ function App() {
                 requestAnimationFrame(runDetect);
             };
             runDetect();
+
+            return () => {
+                window.removeEventListener("deviceorientation", directionFacing);
+            };
         }
 
         const checkReady = setInterval(() => {
@@ -112,6 +112,11 @@ function App() {
                 clearInterval(checkReady);
             }
         });
+
+        if(window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", directionFacing, true);
+        }
+        
         startCam();
     }, []);
 
