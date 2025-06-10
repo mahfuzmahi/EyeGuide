@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from "react";
+import React, {useRef, useEffect, useState} from "react";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 
@@ -6,6 +6,7 @@ function App() {
     const videoCam = useRef(null);
     const canvasCam = useRef(null);
     const wordsUsed = useRef(new Set());
+    const [currentDirection, setdirectionFacing] = useState("");
 
     useEffect(() => {
         const startCam = async () => {
@@ -50,17 +51,17 @@ function App() {
                 let arrow = "";
 
                 if(head < 45 || head >= 315) {
-                    arrow = "You are facing North";
+                    arrow = "North";
                 } else if (head < 135) {
-                    arrow = "You are facing East";
+                    arrow = "East";
                 } else if(head > 225) {
-                    arrow = "You are facing South";
+                    arrow = "South";
                 } else {
-                    arrow = "You are facing West";
+                    arrow = "West";
                 }
+                setdirectionFacing(`You are currently facing ${arrow}`);
+                speakObject(`You are currently facing ${arrow}`);
             }
-
-            speakObject(arrow, 0, 0);
         };
 
         if(window.DeviceOrientationEvent) {
@@ -131,6 +132,17 @@ function App() {
                 left: 0
             }}
         />
+        <div
+            style = {{
+                position: 'absolute',
+                top: 20,
+                left: 20,
+                color: "white",
+                fontSize: '12px'
+            }}
+        >
+            {currentDirection}
+        </div>
         </>
     );
 }
