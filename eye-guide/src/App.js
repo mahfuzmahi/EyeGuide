@@ -83,6 +83,8 @@ function App() {
                     const detectedObjects = await detectModel.detect(videoCam.current);
                     const context = canvasCam.current.getContext("2d");
 
+                    const count = {};
+
                     context.clearRect(0, 0, videoCam.current.videoWidth, videoCam.current.videoHeight);
 
                     detectedObjects.forEach((o) => {
@@ -93,6 +95,12 @@ function App() {
                         context.lineWidth = 2;
                         context.strokeRect(x, y, w, h);
                         context.fillText(o.class, x, label);
+
+                        if(count[o.class]) {
+                            count[o.class] += 1;
+                        } else {
+                            count[o.class] = 1;
+                        }
 
                         speakObject(o.class);
                     });
