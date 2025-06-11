@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from "react";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
+import CameraOverlay from "./CameraOverlay";
 
 function App() {
     const videoCam = useRef(null);
@@ -8,26 +9,33 @@ function App() {
     const wordsUsed = useRef(new Set());
     const [currentDirection, setdirectionFacing] = useState("");
     const lastDirection = useRef("");
+    const [camOverlay, setOverlay] = useState(true);
+
+    const handleOverlay = () => {
+            setOverlay(false);
+            startCam();
+        }
+
+    const startCam = async () => {
+        try {
+            const camStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: {ideal: 'environment'} // access to the back camera
+                },
+                audio: false
+            });
+
+            if(videoCam.current) {
+                videoCam.current.srcObject = camStream;
+
+            }
+        } catch (error) {
+            console.log("Unable to access camera", error);
+            alert("Camera access required in order for EyeGuide to work!");
+        }
+    };
 
     useEffect(() => {
-        const startCam = async () => {
-            try {
-                const camStream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: {ideal: 'environment'} // access to the back camera
-                    },
-                    audio: false
-                });
-
-                if(videoCam.current) {
-                    videoCam.current.srcObject = camStream;
-                }
-            } catch (error) {
-                console.log("Unable to access camera", error);
-                alert("Camera access required in order for EyeGuide to work!");
-            }
-        };
-
         const speakObject = async (text) => {
             if(wordsUsed.current.has(text)) {
                 return;
@@ -114,22 +122,15 @@ function App() {
             };
         }
 
-        const checkReady = setInterval(() => {
-            if(videoCam.current && videoCam.current.readyState === 4) {
-                detectObject();
-                clearInterval(checkReady);
-            }
-        });
-
         if(window.DeviceOrientationEvent) {
             window.addEventListener("deviceorientation", directionFacing, true);
         }
-        
-        startCam();
     }, []);
 
     return (
         <>
+        {camOverlay && <CameraOverlay onStart = {handleOverlay}/>}
+
         <video
             ref={videoCam}
             autoPlay
