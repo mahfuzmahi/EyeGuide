@@ -16,12 +16,13 @@ const CameraOverlay = ({onEntry}) => {
                 textAlign: 'center',
                 color: 'black',
                 backgroundColor: 'transparent',
-                fontSize: '12px',
+                fontSize: '30px',
                 zIndex: '9999',
-                alignItems: 'center'
+                alignItems: 'center',
+                transition: 'fade'
             }}
         >
-            Tap the screen anywhere for camera access <br/>
+            Tap anywhere for Camera access <br/>
         </div>
     );
 };
