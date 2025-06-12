@@ -13,7 +13,12 @@ const CameraOverlay = ({onEntry}) => {
                 display: 'flex',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                textAlign: 'center'
+                textAlign: 'center',
+                color: 'black',
+                backgroundColor: 'transparent',
+                fontSize: '12px',
+                zIndex: '9999',
+                alignItems: 'center'
             }}
         >
             Tap the screen anywhere for camera access <br/>
