@@ -10,7 +10,8 @@ function App() {
     const [currentDirection, setdirectionFacing] = useState("");
     const lastDirection = useRef("");
     const [camOverlay, setOverlay] = useState(true);
-    const lastSaid = useRef("");
+    const alreadySpoken = useRef("");
+    const to = useRef("");
 
     useEffect(() => { 
         if(!camOverlay) {
@@ -50,30 +51,35 @@ function App() {
             };
 
             const speakCountObjects = (objectCount) => {
-                let text = "";
+                if(alreadySpoken.current) {
+                    return;
+                }
+
+                let sentenceParts = [];
 
                 for(let key in objectCount) {
                     const count = objectCount[key];
 
                     if(count === 1) {
-                        text += `${count} ${key},`;
+                        sentenceParts.push(`one ${key},`);
                     } else {
-                        text += `${count} ${key}`;
+                        sentenceParts.push(`${count} ${key}s,`);
                     }
                 }
 
-                text = text.trim();
-                if(text.endsWith(",")) {
-                    text = text.slice(0, -1);
-                }
+                if(sentenceParts.length > 0) {
+                        const fullSentence = "There is " + sentenceParts.join(", ");
+                        const utter = new SpeechSynthesisUtterance(fullSentence);
+                        utter.rate = 1;
+                        window.speechSynthesis.speak(utter);
 
-                if(text && text !== lastSaid.current) {
-                    const utter = new SpeechSynthesisUtterance(text);
-                    utter.rate = 1;
-                    window.speechSynthesis.speak(utter);
-                    lastSaid.current = text;
+                        alreadySpoken.current = true;
+
+                        to.current = setTimeout(() => {
+                            alreadySpoken.current = false;
+                        }, 10000);
                 }
-            }
+            };
 
             const directionFacing = (event) => {
                 const head = event.alpha;
@@ -134,7 +140,7 @@ function App() {
 
                             speakObject(o.class);
                         });
-                        speakCountObjects();
+                        speakCountObjects(count);
                     }
                     requestAnimationFrame(runDetect);
                 };
