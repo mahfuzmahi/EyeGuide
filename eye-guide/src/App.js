@@ -10,7 +10,8 @@ function App() {
     const [currentDirection, setdirectionFacing] = useState("");
     const lastDirection = useRef("");
     const [camOverlay, setOverlay] = useState(true);
- 
+    const lastSaid = useRef("");
+
     useEffect(() => { 
         if(!camOverlay) {
             const startCam = async () => {
@@ -47,6 +48,32 @@ function App() {
                     wordsUsed.current.delete(text);
                 }, 3000);
             };
+
+            const speakCountObjects = (objectCount) => {
+                let text = "";
+
+                for(let key in objectCount) {
+                    const count = objectCount[key];
+
+                    if(count === 1) {
+                        text += `${count} ${key},`;
+                    } else {
+                        text += `${count} ${key}`;
+                    }
+                }
+
+                text = text.trim();
+                if(text.endsWith(",")) {
+                    text = text.slice(0, -1);
+                }
+
+                if(text && text !== lastSaid.current) {
+                    const utter = new SpeechSynthesisUtterance(text);
+                    utter.rate = 1;
+                    window.speechSynthesis.speak(utter);
+                    lastSaid.current = text;
+                }
+            }
 
             const directionFacing = (event) => {
                 const head = event.alpha;
@@ -107,6 +134,7 @@ function App() {
 
                             speakObject(o.class);
                         });
+                        speakCountObjects();
                     }
                     requestAnimationFrame(runDetect);
                 };
