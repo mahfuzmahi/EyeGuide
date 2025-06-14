@@ -124,21 +124,41 @@ function App() {
                         context.clearRect(0, 0, videoCam.current.videoWidth, videoCam.current.videoHeight);
 
                         detectedObjects.forEach((o) => {
-                            const [x, y, w, h] = o.bbox;
-                            const label = y + 10;
+                            if (o.score >= 0.6) {
+                                const [x, y, w, h] = o.bbox;
+                                const label = y + 10;
+                                
+                                let tooClose = false;
+                                if(w > 250) {
+                                    tooClose = true;
+                                }
 
-                            context.strokeStyle = "green";
-                            context.lineWidth = 2;
-                            context.strokeRect(x, y, w, h);
-                            context.fillText(o.class, x, label);
+                                let boxColor = "";
+                                let fillerColor = "";
 
-                            if(count[o.class]) {
-                                count[o.class] += 1;
-                            } else {
-                                count[o.class] = 1;
-                            }
+                                if(tooClose) {
+                                    fillerColor = "rgba(255, 0, 0, 0.2)";
+                                    boxColor = "red";
+                                } else {
+                                    fillerColor = "rgba(0, 255, 0, 0.2)";
+                                    boxColor = "green";
+                                }
+                                
+                                context.fillStyle = fillerColor;
+                                context.fillRect(x, y, w, h);
 
-                            speakObject(o.class);
+                                context.strokeStyle = boxColor;
+                                context.lineWidth = 2;
+                                context.strokeRect(x, y, w, h);
+                                context.fillText(o.class, x, label);
+
+                                if(count[o.class]) {
+                                    count[o.class] += 1;
+                                } else {
+                                    count[o.class] = 1;
+                                }
+                                speakObject(o.class);
+                            }   
                         });
                         speakCountObjects(count);
                     }
