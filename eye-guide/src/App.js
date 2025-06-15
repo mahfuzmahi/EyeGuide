@@ -127,7 +127,7 @@ function App() {
                                 }
 
                                 const centerObject = x + w / 2;
-                                let position = "in the middle";
+                                let position = "to the middle";
 
                                 if(centerObject < canvasCam.current.width / 2) {
                                     position = "to your left";
@@ -135,9 +135,17 @@ function App() {
                                     position = "to your right"
                                 }
 
-                                const positionMessage = `${o.class} is ${position}`;
+                                let distance = "far";
+
+                                if(w > 250) {
+                                    distance = "very close";
+                                } else if(w > 100) {
+                                    distance = "ahead";
+                                }
+
+                                const pdMessage = `${o.class} is ${distance}, ${position}`;
                                 speakObject(positionMessage);
-                                
+
                                 context.fillStyle = fillerColor;
                                 context.fillRect(x, y, w, h);
 
