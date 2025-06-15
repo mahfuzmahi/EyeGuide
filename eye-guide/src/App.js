@@ -10,6 +10,7 @@ function App() {
     const [camOverlay, setOverlay] = useState(true);
     const alreadySpoken = useRef("");
     const to = useRef("");
+    const [countTotal, setCountTotal] = useState(0);
 
     useEffect(() => { 
         if(!camOverlay) {
@@ -92,7 +93,7 @@ function App() {
 
                         context.drawImage(videoCam.current, 0, 0, canvasCam.current.width, canvasCam.current.height);
 
-                        const brightnessInfo = context.getImageData(videoCam.current, 0, 0, canvasCam.current.width, canvasCam.current.height);
+                        const brightnessInfo = context.getImageData(0, 0, canvasCam.current.width, canvasCam.current.height);
                         let brightnessData = 0;
 
                         for(let i = 0; i < brightnessInfo.data.length; i += 4) {
@@ -114,6 +115,9 @@ function App() {
                         canvasCam.current.height = videoCam.current.videoHeight;
 
                         const detectedObjects = await detectModel.detect(videoCam.current, 20);
+
+                        const validObjects = detectedObjects.filter(object => object.score > 0.6);
+                        setCountTotal(validObjects.length);
 
                         const count = {};
 
@@ -236,11 +240,15 @@ function App() {
             style = {{
                 position: 'absolute',
                 top: 20,
-                left: 20,
+                right: 20,
                 color: "white",
-                fontSize: '12px'
+                fontSize: '14px',
+                padding: '5px 10px',
+                borderRadius: '14px',
+                zIndex: 3,
             }}
         >
+            Objects: {countTotal}
         </div>
         </>
     );
