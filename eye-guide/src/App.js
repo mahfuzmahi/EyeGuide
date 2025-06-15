@@ -81,32 +81,6 @@ function App() {
                 }
             };
 
-            const directionFacing = (event) => {
-                const head = event.alpha;
-
-                if(head != null) {
-                    let arrow = "";
-
-                    if(head < 45 || head >= 315) {
-                        arrow = "North";
-                    } else if (head < 135) {
-                        arrow = "East";
-                    } else if(head > 225) {
-                        arrow = "South";
-                    } else {
-                        arrow = "West";
-                    }
-                    
-                    const directionMessage = `You are currently facing ${arrow}`;
-
-                    if(lastDirection.current !== directionMessage) {
-                        setdirectionFacing(directionMessage);
-                        speakObject(directionMessage);
-                        lastDirection.current = directionMessage;
-                    }
-                }
-            };
-
             const detectObject = async () => {
                 await tf.setBackend("webgl");
                 await tf.ready();
