@@ -125,6 +125,18 @@ function App() {
                                     fillerColor = "rgba(0, 255, 0, 0.2)";
                                     boxColor = "green";
                                 }
+
+                                const centerObject = x + w / 2;
+                                let position = "in the middle";
+
+                                if(centerObject < canvasCam.current.width / 2) {
+                                    position = "to your left";
+                                } else if(centerObject > 2 * canvasCam.current.width / 3) {
+                                    position = "to your right"
+                                }
+
+                                const positionMessage = `${o.class} is ${position}`;
+                                speakObject(positionMessage);
                                 
                                 context.fillStyle = fillerColor;
                                 context.fillRect(x, y, w, h);
