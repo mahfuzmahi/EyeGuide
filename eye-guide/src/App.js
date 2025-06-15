@@ -13,6 +13,7 @@ function App() {
     const [countTotal, setCountTotal] = useState(0);
     const objectsLastSeen = useRef(new Set());
     const objectWidths = useRef({});
+    const previousCount = useRef(0);
 
     useEffect(() => { 
         if(!camOverlay) {
@@ -120,6 +121,11 @@ function App() {
 
                         const validObjects = detectedObjects.filter(object => object.score > 0.6);
                         setCountTotal(validObjects.length);
+
+                        if(validObjects.length - previousCount.filer(object => object.score > 3)) {
+                            speakObject("Multiple objects have entered the view");
+                        }
+                        previousCount.current = validObjects.length;
 
                         const currentObjects = new Set(validObjects.map(object => object.class));
 
