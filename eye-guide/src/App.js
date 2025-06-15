@@ -116,8 +116,12 @@ function App() {
 
                 const runDetect = async () => {
                     if(videoCam.current && canvasCam.current) {
-                        const detectedObjects = await detectModel.detect(videoCam.current);
                         const context = canvasCam.current.getContext("2d");
+                        
+                        canvasCam.current.width = videoCam.current.videoWidth;
+                        canvasCam.current.height = videoCam.current.videoHeight;
+
+                        const detectedObjects = await detectModel.detect(videoCam.current, 20);
 
                         const count = {};
 
@@ -126,7 +130,13 @@ function App() {
                         detectedObjects.forEach((o) => {
                             if (o.score >= 0.6) {
                                 const [x, y, w, h] = o.bbox;
-                                const label = y + 10;
+                                let labelY;
+
+                                if(y > 10) {
+                                    labelY = y - 5;
+                                } else {
+                                    labelY = y + 15;
+                                }
                                 
                                 let tooClose = false;
                                 if(w > 250) {
@@ -150,7 +160,7 @@ function App() {
                                 context.strokeStyle = boxColor;
                                 context.lineWidth = 2;
                                 context.strokeRect(x, y, w, h);
-                                context.fillText(o.class, x, label);
+                                context.fillText(o.class, x, labelY);
 
                                 if(count[o.class]) {
                                     count[o.class] += 1;
@@ -194,21 +204,25 @@ function App() {
             autoPlay
             playsInline
             style = {{
+                position: 'absolute',
+                top: 0,
+                left: 0,
                 width: '100vw', 
                 height: '100vh', 
                 objectFit: 'cover', 
-                display: 'block'
+                zIndex: 1,
             }}
         />
         
         <canvas
             ref={canvasCam}
             style = {{
-                width: '100vw', 
-                height: '100vh', 
                 position: 'absolute', 
                 top: 0, 
-                left: 0
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 2,
             }}
         />
         <div
