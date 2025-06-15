@@ -89,6 +89,26 @@ function App() {
                 const runDetect = async () => {
                     if(videoCam.current && canvasCam.current) {
                         const context = canvasCam.current.getContext("2d");
+
+                        context.drawImage(videoCam.current, 0, 0, canvasCam.current.width, canvasCam.current.height);
+
+                        const brightnessInfo = context.getImageData(videoCam.current, 0, 0, canvasCam.current.width, canvasCam.current.height);
+                        let brightnessData = 0;
+
+                        for(let i = 0; i < brightnessInfo.data.length; i += 4) {
+                            const red = brightnessInfo[i];
+                            const green = brightnessInfo[i + 1];
+                            const blue = brightnessInfo[i + 2];
+
+                            const average = (red + green + blue) / 3;
+                            brightnessData += average;
+                        }
+
+                        const averageLight = brightnessData / (brightnessInfo.data.length / 4);
+
+                        if(averageLight < 40) {
+                            speakObject("Low light, please go to a brighter area");
+                        }
                         
                         canvasCam.current.width = videoCam.current.videoWidth;
                         canvasCam.current.height = videoCam.current.videoHeight;
@@ -143,8 +163,12 @@ function App() {
                                     distance = "ahead";
                                 }
 
+                                if(distance === "very close" && position === "to the middle") {
+                                    speakObject("Obstacle ahead");
+                                }
+
                                 const pdMessage = `${o.class} is ${distance}, ${position}`;
-                                speakObject(positionMessage);
+                                speakObject(pdMessage);
 
                                 context.fillStyle = fillerColor;
                                 context.fillRect(x, y, w, h);
@@ -159,7 +183,6 @@ function App() {
                                 } else {
                                     count[o.class] = 1;
                                 }
-                                speakObject(o.class);
                             }   
                         });
                         speakCountObjects(count);
