@@ -7,8 +7,6 @@ function App() {
     const videoCam = useRef(null);
     const canvasCam = useRef(null);
     const wordsUsed = useRef(new Set());
-    const [currentDirection, setdirectionFacing] = useState("");
-    const lastDirection = useRef("");
     const [camOverlay, setOverlay] = useState(true);
     const alreadySpoken = useRef("");
     const to = useRef("");
@@ -149,10 +147,6 @@ function App() {
                     requestAnimationFrame(runDetect);
                 };
                 runDetect();
-
-                return () => {
-                    window.removeEventListener("deviceorientation", directionFacing);
-                };
             }
 
             const checkReady = setInterval(() => {
@@ -161,10 +155,6 @@ function App() {
                     clearInterval(checkReady);
                 }
             });
-
-            if(window.DeviceOrientationEvent) {
-                window.addEventListener("deviceorientation", directionFacing, true);
-            }
             
             startCam();
         }
@@ -208,7 +198,6 @@ function App() {
                 fontSize: '12px'
             }}
         >
-            {currentDirection}
         </div>
         </>
     );
