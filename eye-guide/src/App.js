@@ -12,6 +12,7 @@ function App() {
     const to = useRef("");
     const [countTotal, setCountTotal] = useState(0);
     const objectsLastSeen = useRef(new Set());
+    const objectWidths = useRef({});
 
     useEffect(() => { 
         if(!camOverlay) {
@@ -137,6 +138,14 @@ function App() {
                         detectedObjects.forEach((o) => {
                             if (o.score >= 0.6) {
                                 const [x, y, w, h] = o.bbox;
+
+                                const previousWidth = objectWidths.current[o.class] || 0;
+
+                                if(w > previousWidth + 30) {
+                                    speakObject(`${o.class} is approaching`);
+                                }
+                                objectWidths.current[o.class] = w;
+
                                 let labelY;
 
                                 if(y > 10) {
