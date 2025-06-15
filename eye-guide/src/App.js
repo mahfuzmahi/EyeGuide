@@ -11,6 +11,7 @@ function App() {
     const alreadySpoken = useRef("");
     const to = useRef("");
     const [countTotal, setCountTotal] = useState(0);
+    const objectsLastSeen = useRef(new Set());
 
     useEffect(() => { 
         if(!camOverlay) {
@@ -118,6 +119,16 @@ function App() {
 
                         const validObjects = detectedObjects.filter(object => object.score > 0.6);
                         setCountTotal(validObjects.length);
+
+                        const currentObjects = new Set(validObjects.map(object => object.class));
+
+                        const enteredInView = [...currentObjects].filter(object => !objectsLastSeen.current.has(object));
+                        enteredInView.forEach(object => speakObject(`Detected ${object}`));
+
+                        const noLongerInFrame = [...objectsLastSeen.current].filter(object => !currentObjects.has(object));
+                        noLongerInFrame.forEach(object => speakObject(`${object} is no longer in view`));
+
+                        objectsLastSeen.current = currentObjects;
 
                         const count = {};
 
@@ -242,7 +253,7 @@ function App() {
                 top: 20,
                 right: 20,
                 color: "white",
-                fontSize: '14px',
+                fontSize: '25px',
                 padding: '5px 10px',
                 borderRadius: '14px',
                 zIndex: 3,
