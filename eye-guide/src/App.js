@@ -14,6 +14,7 @@ function App() {
     const objectsLastSeen = useRef(new Set());
     const objectWidths = useRef({});
     const previousCount = useRef(0);
+    const path = useRef("unknown");
 
     useEffect(() => { 
         if(!camOverlay) {
@@ -118,6 +119,36 @@ function App() {
                         canvasCam.current.height = videoCam.current.videoHeight;
 
                         const detectedObjects = await detectModel.detect(videoCam.current, 20);
+
+                        let pathIsBlocked = false;
+                        const canvasWidth = canvasCam.current.width;
+                        const centerStart = canvasWidth / 2;
+                        const centerEnd = (canvasWidth * 2) / 3;
+
+                        for(const pathDetectedObject of detectedObjects) {
+                            if(pathDetectedObject.score < 0.6) {
+                                continue;
+                            }
+
+                            const [bboxX, bboxY, bboxW, bboxH] = pathDetectedObject.bbox;
+                            const pathObjectCenter = bboxX + bboxW / 2;
+
+                            const isCenterPath = pathObjectCenter >= centerStart && pathObjectCenter <= centerEnd;
+                            const isObstacle = bboxW > 200 || bboxH > 200;
+
+                            if(isCenterPath && isObstacle) {
+                                pathIsBlocked = true;
+                                break;
+                            }
+                        }
+
+                        if(pathIsBlocked && path.current !== "blocked") {
+                            speakObject("Warning, path ahead is blocked");
+                            path.current = "blocked";
+                        } else if(!pathIsBlocked && path.current !== "clear") {
+                            speakObject("Path ahead is clear");
+                            path.current = "clear"
+                        }
 
                         const validObjects = detectedObjects.filter(object => object.score > 0.6);
                         setCountTotal(validObjects.length);
