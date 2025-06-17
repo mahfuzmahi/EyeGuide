@@ -2,6 +2,7 @@ import React, {useRef, useEffect, useState} from "react";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 import CameraOverlay from "./CameraOverlay";
+import OverlayControls from "./OverlayControls";
 
 function App() {
     const videoCam = useRef(null);
