@@ -16,6 +16,20 @@ function App() {
     const objectWidths = useRef({});
     const previousCount = useRef(0);
     const path = useRef("unknown");
+    const [isMuted, setMute] = useState(false);
+    const [isPaused, setPause] = useState(false);
+
+    const muteClick = () => {
+        setMute(prev => !prev);
+    };
+
+    const pauseClick = () => {
+        setPause(prev => !prev);
+    };
+
+    const summaryClick = () => {
+        speakObject("Summarizing detected objects");
+    };
 
     useEffect(() => { 
         if(!camOverlay) {
@@ -38,7 +52,7 @@ function App() {
             };
 
             const speakObject = async (text) => {
-                if(wordsUsed.current.has(text)) {
+                if(isMuted || wordsUsed.current.has(text)) {
                     return;
                 }
 
@@ -93,6 +107,11 @@ function App() {
                 console.log("Model has ran successfully");
 
                 const runDetect = async () => {
+                    if(isPaused) {
+                        requestAnimationFrame(runDetect);
+                        return;
+                    }
+
                     if(videoCam.current && canvasCam.current) {
                         const context = canvasCam.current.getContext("2d");
 
@@ -154,7 +173,7 @@ function App() {
                         const validObjects = detectedObjects.filter(object => object.score > 0.6);
                         setCountTotal(validObjects.length);
 
-                        if(validObjects.length - previousCount.filer(object => object.score > 3)) {
+                        if(validObjects.length - previousCount.filter(object => object.score > 3)) {
                             speakObject("Multiple objects have entered the view");
                         }
                         previousCount.current = validObjects.length;
@@ -308,6 +327,14 @@ function App() {
         >
             Objects: {countTotal}
         </div>
+
+        <OverlayControls
+            onPauseClick = {pauseClick}
+            onVoiceClick = {muteClick}
+            onSummaryClick = {summaryClick}
+            isMuted = {isMuted}
+            isPaused = {isPaused}
+        />
         </>
     );
 }
