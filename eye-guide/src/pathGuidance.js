@@ -64,6 +64,22 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
             stopWarn.current = false;
         }
 
-        
+        hist.current.push(guidance.current);
+        if(hist.current.length > 5) {
+            hist.current.shift();
+        }
+
+        if(bigObstacles === 0) {
+            if(guidance.current !== "clear") {
+                speak("Path ahead is clear");
+                guidance.current = "clear";
+            }
+        } else if(recomLeft && guidance.current !== "left") {
+            speak("Move a little to your left");
+            guidance.current = "left";
+        } else if(recomRight && guidance.current !== "right") {
+            speak("Move a little to your right");
+            guidance.current = "right";
+        }
     })
 }
