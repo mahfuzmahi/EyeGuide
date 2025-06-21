@@ -87,5 +87,17 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
         } else if (hist.current.slice(-3).every(s => s === "right") && guidance.current === "right") {
             speak("Keep on moving to the left until clear message");
         }
-    })
+
+        if(rightClear) {
+            zoneTime.current.left++;
+            if(zoneTime.current.right === 3) {
+                speak("Right side is clear to walk");
+            }
+        } else {
+            zoneTime.current.right(0);
+        }
+    }, [detectedObjects, speak, canvasRef]);
+    return null;
 }
+
+export default PathGuidance;
