@@ -3,6 +3,7 @@ import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 import CameraOverlay from "./CameraOverlay";
 import OverlayControls from "./OverlayControls";
+import PathGuidance from "./pathGuidance";
 
 function App() {
     const videoCam = useRef(null);
@@ -18,6 +19,7 @@ function App() {
     const path = useRef("unknown");
     const [isMuted, setMute] = useState(false);
     const [isPaused, setPause] = useState(false);
+    const [newDetections, setND] = useState([]);
 
     const muteClick = () => {
         setMute(prev => !prev);
@@ -171,6 +173,7 @@ function App() {
                         }
 
                         const validObjects = detectedObjects.filter(object => object.score > 0.6);
+                        setND(validObjects);
                         setCountTotal(validObjects.length);
 
                         if(validObjects.length - previousCount.filter(object => object.score > 3)) {
@@ -334,6 +337,12 @@ function App() {
             onSummaryClick = {summaryClick}
             isMuted = {isMuted}
             isPaused = {isPaused}
+        />
+
+        <PathGuidance
+            detectedObjects = {newDetections}
+            speak = {speakObject}
+            canvasRef = {canvasCam}
         />
         </>
     );
