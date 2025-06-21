@@ -40,7 +40,7 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
                 recomRight = true;
                 leftClear = false;
             } else if(c > centerEnd) {
-                recomleft = true;
+                recomLeft = true;
                 rightClear = false;
             }
         }

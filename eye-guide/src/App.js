@@ -21,6 +21,23 @@ function App() {
     const [isPaused, setPause] = useState(false);
     const [newDetections, setND] = useState([]);
 
+    const speakObject = async (text) => {
+                if(isMuted || wordsUsed.current.has(text)) {
+                    return;
+                }
+
+                wordsUsed.current.add(text);
+
+                const synth = window.speechSynthesis;
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.rate = 1;
+                synth.speak(utter);
+
+                setTimeout(() => {
+                    wordsUsed.current.delete(text);
+                }, 3000);
+            };
+
     const muteClick = () => {
         setMute(prev => !prev);
     };
@@ -51,23 +68,6 @@ function App() {
                     console.log("Unable to access camera", error);
                     alert("Camera access required in order for EyeGuide to work!");
                 }
-            };
-
-            const speakObject = async (text) => {
-                if(isMuted || wordsUsed.current.has(text)) {
-                    return;
-                }
-
-                wordsUsed.current.add(text);
-
-                const synth = window.speechSynthesis;
-                const utter = new SpeechSynthesisUtterance(text);
-                utter.rate = 1;
-                synth.speak(utter);
-
-                setTimeout(() => {
-                    wordsUsed.current.delete(text);
-                }, 3000);
             };
 
             const speakCountObjects = (objectCount) => {
