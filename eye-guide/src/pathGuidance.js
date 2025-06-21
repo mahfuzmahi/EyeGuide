@@ -3,6 +3,8 @@ import React, {useRef, useEffect} from "react";
 function PathGuidance({detectedObjects, speak, canvasRef}) {
     const guidance = useRef("none");
     const stopWarn = useRef(false);
+    const hist = useRef([]);
+    const zoneTime = useRef({left: 0, right: 0});
 
     useEffect(() => {
         if(!detectedObjects || detectedObjects.length === 0 || !canvasRef.current) {
@@ -12,10 +14,15 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
         const canvasWidth = canvasRef.current.width;
         const centerStart = canvasWidth / 3;
         const centerEnd = (canvasWidth * 2) / 3;
+        const leftEnd = canvasWidth / 3;
+        const rightEnd = (canvasWidth * 2) / 3;
 
         let bigObstacles = 0;
         let recomLeft = false;
         let recomRight = false;
+        let leftClear = true;
+        let rightClear = true;
+        let middleBlocked = false;
 
         for(const o of detectedObjects) {
             const [x, y, w, h] = o.bbox;
@@ -28,11 +35,22 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
 
             if(c >= centerStart && c <= centerEnd) {
                 bigObstacles++;
+                middleBlocked = true;
             } else if(c < centerStart) {
                 recomRight = true;
+                leftClear = false;
             } else if(c > centerEnd) {
                 recomleft = true;
+                rightClear = false;
             }
+        }
+
+        if(middleBlocked && !leftClear && !rightClear) {
+            if(guidance.current != "deadend") {
+                speak("Dead end ahead, please turn around");
+                guidance.current = "deadend";
+            }
+            return;
         }
 
         if(bigObstacles >= 3) {
@@ -45,5 +63,7 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
         } else {
             stopWarn.current = false;
         }
+
+        
     })
 }
