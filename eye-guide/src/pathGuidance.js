@@ -35,6 +35,15 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
             }
         }
 
-        
+        if(bigObstacles >= 3) {
+            if(!stopWarn.current) {
+                speak("There are too many obstacles ahead. Please stop walking.");
+                stopWarn.current = true;
+                guidance.current = "stop";
+            }
+            return;
+        } else {
+            stopWarn.current = false;
+        }
     })
 }
