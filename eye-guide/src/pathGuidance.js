@@ -81,5 +81,11 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
             speak("Move a little to your right");
             guidance.current = "right";
         }
+
+        if(hist.current.slice(-3).every(s => s === "left") && guidance.current === "left") {
+            speak("Keep on moving to the left until clear message");
+        } else if (hist.current.slice(-3).every(s => s === "right") && guidance.current === "right") {
+            speak("Keep on moving to the left until clear message");
+        }
     })
 }
