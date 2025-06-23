@@ -257,6 +257,7 @@ function App() {
                                 context.fillStyle = fillerColor;
                                 context.fillRect(x, y, w, h);
 
+                                context.font = "bold 18px Arial";
                                 context.strokeStyle = boxColor;
                                 context.lineWidth = 2;
                                 context.strokeRect(x, y, w, h);
