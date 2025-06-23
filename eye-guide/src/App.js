@@ -330,14 +330,16 @@ function App() {
         >
             Objects: {countTotal}
         </div>
-
-        <OverlayControls
+        
+        {!camOverlay && (
+            <OverlayControls
             onPauseClick = {pauseClick}
             onVoiceClick = {muteClick}
             onSummaryClick = {summaryClick}
             isMuted = {isMuted}
             isPaused = {isPaused}
         />
+        )}
 
         <PathGuidance
             detectedObjects = {newDetections}
