@@ -46,7 +46,7 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
         }
 
         if(middleBlocked && !leftClear && !rightClear) {
-            if(guidance.current != "deadend") {
+            if(guidance.current !== "deadend") {
                 speak("Dead end ahead, please turn around");
                 guidance.current = "deadend";
             }
@@ -94,7 +94,7 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
                 speak("Right side is clear to walk");
             }
         } else {
-            zoneTime.current.right(0);
+            zoneTime.current.right = 0;
         }
     }, [detectedObjects, speak, canvasRef]);
     return null;

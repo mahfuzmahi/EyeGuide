@@ -176,7 +176,7 @@ function App() {
                         setND(validObjects);
                         setCountTotal(validObjects.length);
 
-                        if(validObjects.length - previousCount.filter(object => object.score > 3)) {
+                        if(validObjects.length - previousCount.current > 3) {
                             speakObject("Multiple objects have entered the view");
                         }
                         previousCount.current = validObjects.length;
