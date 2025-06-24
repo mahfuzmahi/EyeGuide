@@ -20,6 +20,7 @@ function App() {
     const [isMuted, setMute] = useState(false);
     const [isPaused, setPause] = useState(false);
     const [newDetections, setND] = useState([]);
+    const hazard = newSet(["knife", "stairs", "stovetop", "oven"]);
 
     const speakObject = async (text) => {
                 if(isMuted || wordsUsed.current.has(text)) {
@@ -198,6 +199,12 @@ function App() {
                         detectedObjects.forEach((o) => {
                             if (o.score >= 0.6) {
                                 const [x, y, w, h] = o.bbox;
+
+                                if(hazard.has(o.class)) {
+                                    speakObject("Warning, hazardous objects ahead");
+                                    fillerColor = "rgba(128, 0, 128, 0.2)"
+                                    boxColor = "purple";
+                                }
 
                                 const previousWidth = objectWidths.current[o.class] || 0;
 

@@ -11,7 +11,7 @@ useEffect(() => {
         recog.start();
 
         recog.onresult = (event) => {
-            const ts = event.results[event.results.length - 1][0].ts.toLowerCase().trin();
+            const ts = event.results[event.results.length - 1][0].ts.toLowerCase().trim();
             console.log("VC: ", ts);
 
             if(ts.includes("pause")) {
@@ -28,7 +28,7 @@ useEffect(() => {
         };
 
         recog.onerror = () => {
-            console.error("VR error", error);
+            console.error("VC error", error);
         }
     }
 }) 
