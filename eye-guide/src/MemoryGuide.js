@@ -7,7 +7,7 @@ function MemoryGuide({detectedObjects, speak}) {
     const seenAgain = 30000;
 
     useEffect(() => {
-        if(detectedObjects || detectedObjects.length === 0) {
+        if(!detectedObjects || detectedObjects.length === 0) {
             return;
         }
 
@@ -26,22 +26,29 @@ function MemoryGuide({detectedObjects, speak}) {
 
         const hist = {};
         log.current.forEach((e) => {
-            e.objects.array.forEach(o => {
+            e.objects.forEach(o => {
                 if(hist[o]) {
-                    hist++;
+                    hist[o]++;
                 } else {
                     hist[o] = 1;
                 }
             });
-        })
+        });
 
         const recent = log.current.slice(-5);
-        const variation = new Set(recent.flatMap.((e) => e.objects)).size;
+        const variation = new Set(recent.flatMap((e) => e.objects)).size;
 
         if(variation < 3 && now - time.current > stationary) {
             speak("You may be standing still, would you like to retrace your steps?");
             time.current = now;
             return;
+        }
+        for(const o in hist) {
+            if(hist[o] > 6 && now - time.current > seenAgain) {
+                speak(`You have seen ${o} several times, you may have been in this area already`);
+                time.current = now;
+                break;
+            }
         } 
-    })
+    }, [detectedObjects, speak])
 }
