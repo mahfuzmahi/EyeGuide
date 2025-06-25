@@ -4,6 +4,7 @@ import * as tf from "@tensorflow/tfjs";
 import CameraOverlay from "./CameraOverlay";
 import OverlayControls from "./OverlayControls";
 import PathGuidance from "./pathGuidance";
+import { speakObject } from "./SpeechQueue";
 
 function App() {
     const videoCam = useRef(null);
@@ -21,6 +22,7 @@ function App() {
     const [isPaused, setPause] = useState(false);
     const [newDetections, setND] = useState([]);
     const hazard = useRef(new Set(["knife", "stairs", "stovetop", "oven"]));
+    const [load, setLoad] = useState(true);
 
     const speakObject = async (text) => {
                 if(isMuted || wordsUsed.current.has(text)) {
@@ -108,6 +110,7 @@ function App() {
 
                 const detectModel = await cocoSsd.load();
                 console.log("Model has ran successfully");
+                setLoad(false);
 
                 const runDetect = async () => {
                     if(isPaused) {
@@ -297,6 +300,34 @@ function App() {
 
     return (
         <>
+        {load && (
+            <div>
+                <div 
+                    style = {{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        backgroundColor: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 9999
+                    }}
+                />
+
+                <div
+                    style = {{
+                        width: '60px',
+                        height: '60px',
+                        border: '6px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '50%',
+                        borderTop: '6px solid white',
+                        animation: 'spin 1s linear infinite'
+                    }}
+                />
+            </div>
+        )}
+
         {camOverlay && <CameraOverlay onEntry = {() => setOverlay(false)}/>}
         <video
             ref={videoCam}
