@@ -34,5 +34,14 @@ function MemoryGuide({detectedObjects, speak}) {
                 }
             });
         })
+
+        const recent = log.current.slice(-5);
+        const variation = new Set(recent.flatMap.((e) => e.objects)).size;
+
+        if(variation < 3 && now - time.current > stationary) {
+            speak("You may be standing still, would you like to retrace your steps?");
+            time.current = now;
+            return;
+        } 
     })
 }
