@@ -23,5 +23,16 @@ function MemoryGuide({detectedObjects, speak}) {
             timestamp: now,
             objects: c
         });
+
+        const hist = {};
+        log.current.forEach((e) => {
+            e.objects.array.forEach(o => {
+                if(hist[o]) {
+                    hist++;
+                } else {
+                    hist[o] = 1;
+                }
+            });
+        })
     })
 }
