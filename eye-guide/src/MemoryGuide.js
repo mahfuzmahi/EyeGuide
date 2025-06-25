@@ -51,4 +51,7 @@ function MemoryGuide({detectedObjects, speak}) {
             }
         } 
     }, [detectedObjects, speak])
+    return null;
 }
+
+export default MemoryGuide;
