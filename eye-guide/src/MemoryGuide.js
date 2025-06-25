@@ -16,5 +16,12 @@ function MemoryGuide({detectedObjects, speak}) {
         log.current = log.current.filter(
             (entry) => now - entry.timestamp < 120000
         );
+
+        const c = detectedObjects.map((o) => o.class);
+
+        log.current.push({
+            timestamp: now,
+            objects: c
+        });
     })
 }
