@@ -6,10 +6,13 @@ const recog = new SpeechRecognition();
 recog.continuous = true;
 recog.lang = 'eng-US';
 
+let run = false;
+
 function VoiceGestureControls ({listen, onPause, onResume, onSummarize, onMute, onUnmute}) {
     useEffect(() => {
-        if(listen) {
+        if(listen && !run) {
             recog.start();
+            run = true;
 
             recog.onresult = (event) => {
                 const ts = event.results[event.results.length - 1][0].ts.toLowerCase().trim();
@@ -28,9 +31,13 @@ function VoiceGestureControls ({listen, onPause, onResume, onSummarize, onMute, 
                 }
             };
 
-            recog.onerror = () => {
+            recog.onerror = (error) => {
                 console.error("VC error", error);
-            }
+            };
+
+            recog.onend = () => {
+                run = false;
+            };
         }
 
         return () => {

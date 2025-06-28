@@ -1,12 +1,12 @@
 import React, {useRef, useEffect, useState} from "react";
 import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
-import CameraOverlay from "../components/CameraOverlay";
-import OverlayControls from "../components/OverlayControls";
-import PathGuidance from "../components/PathGuidance";
-import { speakObject } from "../components/SpeechQueue";
-import MemoryGuide from "../components/MemoryGuide";
-import SceneryGuesser from "../components/SceneryGuesser";
+import CameraOverlay from "./components/CameraOverlay";
+import OverlayControls from "./components/OverlayControls";
+import PathGuidance from "./components/PathGuidance";
+import { speakObject } from "./components/SpeechQueue";
+import MemoryGuide from "./components/MemoryGuide";
+import SceneryGuesser from "./components/SceneryGuesser";
 import VoiceGestureControls from "./components/VoiceGestureControls";
 
 function App() {
