@@ -6,9 +6,9 @@ const recog = new SpeechRecognition();
 recog.continuous = true;
 recog.lang = 'eng-US';
 
-function VoiceGestureControls ({}) {
+function VoiceGestureControls ({listen, onPause, onResume, onSummarize, onMute, onUnmute}) {
     useEffect(() => {
-        if(!CameraOverlay) {
+        if(listen) {
             recog.start();
 
             recog.onresult = (event) => {
@@ -32,7 +32,12 @@ function VoiceGestureControls ({}) {
                 console.error("VC error", error);
             }
         }
-    }) 
+
+        return () => {
+            recog.stop();
+        };
+    }, [listen, onPause, onResume, onSummarize, onMute, onUnmute]) 
+    return null;
 }
 
 export default VoiceGestureControls;
