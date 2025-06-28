@@ -7,6 +7,7 @@ import PathGuidance from "../components/PathGuidance";
 import { speakObject } from "../components/SpeechQueue";
 import MemoryGuide from "../components/MemoryGuide";
 import SceneryGuesser from "../components/SceneryGuesser";
+import VoiceGestureControls from "./components/VoiceGestureControls";
 
 function App() {
     const videoCam = useRef(null);
