@@ -1,19 +1,25 @@
 import React from "react";
 
 const q = [];
+const time = null;
 
 export const speakObject = (t, r = 1) => {
-    if(window.speechSynthesis.speaking || q.includes(t)) {
-        return;
+    if(!t) {
+        return ;
     }
-
     q.push(t);
-    const utter = new SpeechSynthesisUtterance(t);
-    utter.rate = r;
 
-    utter.onend = () => {
-        q.shift();
-    };
+    if(t) {
+        clearTimeout(t);
+    }
+    t = setTimeout(() => {
+        if(q.length === 0) {
+            return;
+        }
 
-    window.speechSynthesis.speak(utter);
+        const count = {};
+        queue.forEach(t => {
+            count[t] = (count[t] || 0) + 1;
+        });
+    }, timeout);
 }
