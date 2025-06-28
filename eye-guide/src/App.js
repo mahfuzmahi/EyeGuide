@@ -3,8 +3,10 @@ import * as cocoSsd from "@tensorflow-models/coco-ssd";
 import * as tf from "@tensorflow/tfjs";
 import CameraOverlay from "./CameraOverlay";
 import OverlayControls from "./OverlayControls";
-import PathGuidance from "./pathGuidance";
+import PathGuidance from "./PathGuidance";
 import { speakObject } from "./SpeechQueue";
+import MemoryGuide from "./MemoryGuide";
+import SceneryGuesser from "./SceneryGuesser";
 
 function App() {
     const videoCam = useRef(null);
@@ -384,6 +386,16 @@ function App() {
             detectedObjects = {newDetections}
             speak = {speakObject}
             canvasRef = {canvasCam}
+        />
+
+        <MemoryGuide
+            detectedObjects = {newDetections}
+            speak = {speakObject}
+        />
+
+        <SceneryGuesser 
+            detectedObjects = {newDetections}
+            speak = {speakObject}
         />
         </>
     );

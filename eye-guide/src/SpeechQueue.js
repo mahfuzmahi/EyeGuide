@@ -1,25 +1,27 @@
-import React from "react";
-
 const q = [];
-const time = null;
+let time = null;
 
-export const speakObject = (t, r = 1) => {
-    if(!t) {
+export const speakObject = (text) => {
+    if(!text) {
         return ;
     }
-    q.push(t);
+    q.push(text);
 
-    if(t) {
-        clearTimeout(t);
+    if(time) {
+        clearTimeout(time);
     }
-    t = setTimeout(() => {
+    time = setTimeout(() => {
         if(q.length === 0) {
             return;
         }
 
         const count = {};
-        q.forEach(t => {
-            count[t] = (count[t] || 0) + 1;
+        q.forEach(i => {
+            if(count[i]) {
+                count[i] += 1;
+            } else {
+                count[i] = 1;
+            }
         });
 
         const p = [];
@@ -33,11 +35,11 @@ export const speakObject = (t, r = 1) => {
             p.push(phrase);
         }
 
-        const utter = SpeechSynthesisUtterance("You are in front of " + p.join(", "));
-        utter.rate = r;
+        const utter = new SpeechSynthesisUtterance("You are in front of " + p.join(", "));
+        utter.rate = 1;
         window.speechSynthesis.speak(utter);
 
         q.length = 0;
-        t = null;
+        time = null;
     }, 5000);
 }
