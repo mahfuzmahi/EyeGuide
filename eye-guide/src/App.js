@@ -398,6 +398,15 @@ function App() {
             detectedObjects = {newDetections}
             speak = {speakObject}
         />
+
+        <VoiceGestureControls
+            listen = {!camOverlay}
+            onPause = {pauseClick}
+            onResume = {() => setPause(false)}
+            onSummarize = {summaryClick}
+            onMute = {() => setMute(true)}
+            onUnmute = {() => setMute(false)}
+        />
         </>
     );
 }
