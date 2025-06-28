@@ -32,5 +32,12 @@ export const speakObject = (t, r = 1) => {
             }
             p.push(phrase);
         }
-    }, timeout);
+
+        const utter = SpeechSynthesisUtterance("You are in front of " + p.join(", "));
+        utter.rate = r;
+        window.speechSynthesis.speak(utter);
+
+        q.length = 0;
+        t = null;
+    }, 5000);
 }
