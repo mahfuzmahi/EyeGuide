@@ -8,6 +8,7 @@ export const speakObject = (text) => {
     }
 
     const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 1;
+    utter.rate = 1.1;
+    utter.pitch = 1.1;
     window.speechSynthesis.speak(utter);
 };
