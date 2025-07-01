@@ -45,3 +45,7 @@
     transform: rotate(360deg);
   }
 }
+
+.glow-click:active {
+  text-shadow: 0 0 8px #fff, 0 0 16px #00f0ff, 0 0 24px #00f0ff;
+}

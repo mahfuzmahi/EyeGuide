@@ -41,13 +41,13 @@ function OverlayControls({
                 zIndex: 10,
             }}
         >
-            <button onClick = {onPauseClick} style = {button}>
+            <button onClick = {onPauseClick} style = {button} className="glow-click">
             {PauseButton()}
             </button>
-            <button onClick = {onSummaryClick} style = {button}>
+            <button onClick = {onSummaryClick} style = {button} className="glow-click">
             Summarize
             </button>
-            <button onClick = {onVoiceClick} style = {button}>
+            <button onClick = {onVoiceClick} style = {button} className="glow-click">
             {MuteButton()}
             </button>
         </div>
@@ -60,7 +60,12 @@ const button =  {
     fontsize: '16px',
     cursor: 'pointer',
     padding: '8px 12px',
-    borderRadius: '6px'
+    borderRadius: '6px',
+    backgroundColor: 'transparent',
+    border: '2px solid white',
+    overflow: 'hidden',
+    transition: 'all 0.3s ease',
+
 };
 
 export default OverlayControls;
