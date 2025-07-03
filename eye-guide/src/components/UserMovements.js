@@ -15,6 +15,12 @@ function UserMovements({detectedObjects, setMoving}) {
             return x + w / 2;
         });
 
-        
+        if(prev.current.length === c.length) {
+            let td = 0;
+            
+            for(let i = 0; i < c.length; i++) {
+                td += Math.abs(c[i] - prev.current[i]);
+            }
+        }
     })
 }
