@@ -21,6 +21,18 @@ function UserMovements({detectedObjects, setMoving}) {
             for(let i = 0; i < c.length; i++) {
                 td += Math.abs(c[i] - prev.current[i]);
             }
+            const avg = td / c.length;
+
+            const move = avg > 0;
+
+            if(now - update.current > 1000) {
+                setMoving(move);
+                update.current = now;
+            }
         }
+
     })
+    return null;
 }
+
+export default UserMovements;
