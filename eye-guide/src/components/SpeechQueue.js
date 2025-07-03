@@ -28,8 +28,8 @@ export const describeRelation = (object) => {
             const aCX = ax + aw / 2;
             const bCX = bx + bw / 2;
 
-            const aCY = ay + aw / 2;
-            const bCY = by + bw / 2;
+            const aCY = ay + ah / 2;
+            const bCY = by + bh / 2;
 
             const dx = Math.abs(aCX - bCX);
             const dy = Math.abs(bCX - bCx);
