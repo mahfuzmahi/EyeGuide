@@ -30,8 +30,9 @@ function UserMovements({detectedObjects, setMoving}) {
                 update.current = now;
             }
         }
+        prev.current = c;
 
-    })
+    }, [detectedObjects, setMoving])
     return null;
 }
 
