@@ -39,10 +39,12 @@ export const describeRelation = (object) => {
                 if(!set.has(k)) {
                     sentence.push(`${a.class} is next to ${b.class}`);
                     set.add(k);
-                } else if(!set.has(k)) {
+                } else if(dy > 50 && aCY < bCY && dx < 100) {
                     const k = `${a.class}-under-${b.class}`;
-                    sentence.push(`${a.class} is under ${b.class}`);
-                    set.add(k);
+                    if(!set.has(k)) {
+                        sentence.push(`${a.class} is under ${b.class}`);
+                        set.add(k);
+                    }
                 }
             }
         }
