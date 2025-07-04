@@ -34,6 +34,14 @@ export const describeRelation = (object) => {
             const dx = Math.abs(aCX - bCX);
             const dy = Math.abs(bCX - bCx);
 
+            if(dx < 100 && dy < 50) {
+                const k = `${a.class}-next-${b.class}`;
+                if(!set.has(k)) {
+                    sentence.push(`${a.class} is next to ${b.class}`);
+                    set.add(k);
+                }
+            }
+
         }
     }
 }
