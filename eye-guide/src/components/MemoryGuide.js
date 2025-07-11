@@ -7,7 +7,7 @@ function MemoryGuide({detectedObjects, speak}) {
     const seenAgain = 30000;
 
     useEffect(() => {
-        if(!detectedObjects || detectedObjects.length === 0) {
+        if(detectedObjects || detectedObjects.length === 0) {
             return;
         }
 

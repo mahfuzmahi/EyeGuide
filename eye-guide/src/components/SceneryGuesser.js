@@ -29,7 +29,7 @@ function SceneryGuesser({detectedObjects, speak}) {
             score[s] = i.filter(item => oClass.includes(item).length);
         }
 
-        const best = Object.entries(score).sort((a,b) => b[1] - a[1][0]);
+        const best = Object.entries(score).sort((a,b) => b[1] - a[1]);
 
         if(best && best[1] >= 2 && best[0] !== lastScene.current) {
             speak(`You seem to be in a ${best[0]}`);

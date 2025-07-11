@@ -32,7 +32,7 @@ export const describeRelation = (object) => {
             const bCY = by + bh / 2;
 
             const dx = Math.abs(aCX - bCX);
-            const dy = Math.abs(bCX - bCx);
+            const dy = Math.abs(bCX - bCY);
 
             if(dx < 100 && dy < 50) {
                 const k = `${a.class}-next-${b.class}`;
