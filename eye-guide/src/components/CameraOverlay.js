@@ -15,7 +15,7 @@ const CameraOverlay = ({onEntry}) => {
                 cursor: 'pointer',
                 textAlign: 'center',
                 color: 'black',
-                backgroundColor: 'transparent',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 fontSize: '30px',
                 zIndex: '9999',
                 alignItems: 'center',
