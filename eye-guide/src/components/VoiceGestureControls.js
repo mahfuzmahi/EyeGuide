@@ -15,7 +15,7 @@ function VoiceGestureControls ({listen, onPause, onResume, onSummarize, onMute, 
             run = true;
 
             recog.onresult = (event) => {
-                const ts = event.results[event.results.length - 1][0].ts.toLowerCase().trim();
+                const ts = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
                 console.log("VC: ", ts);
 
                 if(ts.includes("pause")) {
@@ -36,7 +36,10 @@ function VoiceGestureControls ({listen, onPause, onResume, onSummarize, onMute, 
             };
 
             recog.onend = () => {
-                run = false;
+                run.current = false;
+                if(listen) {
+                    recog.start();
+                }
             };
         }
 
