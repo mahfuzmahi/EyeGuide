@@ -13,7 +13,7 @@ function SceneryGuesser({detectedObjects, speak}) {
     const time = useRef(Date.now());
 
     useEffect(() => {
-        if(detectedObjects || detectedObjects.length === 0) {
+        if(!detectedObjects || detectedObjects.length === 0) {
             return;
         }
 
@@ -26,14 +26,15 @@ function SceneryGuesser({detectedObjects, speak}) {
         const score = {};
 
         for(const [s, i] of Object.entries(map)) {
-            score[s] = i.filter(item => oClass.includes(item).length);
+            score[s] = i.filter(item => oClass.includes(item)).length;
         }
 
         const best = Object.entries(score).sort((a,b) => b[1] - a[1]);
+        const [sName, sBest] = best[0] || [];
 
-        if(best && best[1] >= 2 && best[0] !== lastScene.current) {
-            speak(`You seem to be in a ${best[0]}`);
-            lastScene.current = best[0];
+        if(sBest >= 2 && sName !== lastScene.current) {
+            speak(`You seem to be in a ${sName}`);
+            lastScene.current = sName;
             time.current = now;
         }
     }, [detectedObjects, speak])
