@@ -14,6 +14,10 @@ export const speakObject = (text) => {
 };
 
 export const describeRelation = (object) => {
+    if(!object || object.length < 2) {
+        return [];
+    }
+
     const sentence = [];
     const set = new Set();
 
@@ -34,17 +38,30 @@ export const describeRelation = (object) => {
             const dx = Math.abs(aCX - bCX);
             const dy = Math.abs(bCX - bCY);
 
-            if(dx < 100 && dy < 50) {
-                const k = `${a.class}-next-${b.class}`;
-                if(!set.has(k)) {
+            if (dx < 100 && dy < 50) {
+                const key = `${a.class}-next-${b.class}`;
+
+                if (!set.has(key)) {
                     sentence.push(`${a.class} is next to ${b.class}`);
-                    set.add(k);
-                } else if(dy > 50 && aCY < bCY && dx < 100) {
-                    const k = `${a.class}-under-${b.class}`;
-                    if(!set.has(k)) {
-                        sentence.push(`${a.class} is under ${b.class}`);
-                        set.add(k);
-                    }
+                    set.add(key);
+                }
+            }
+
+            if (dx < 100 && dy > 50 && aCY < bCY) {
+                const key = `${a.class}-under-${b.class}`;
+
+                if (!set.has(key)) {
+                    sentence.push(`${a.class} is under ${b.class}`);
+                    set.add(key);
+                }
+            }
+
+            if (dx < 100 && dy > 50 && aCY > bCY) {
+                const key = `${a.class}-above-${b.class}`;
+                
+                if (!set.has(key)) {
+                    sentence.push(`${a.class} is above ${b.class}`);
+                    set.add(key);
                 }
             }
         }
