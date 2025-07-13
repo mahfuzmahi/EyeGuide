@@ -3,6 +3,8 @@ import {useEffect, useRef} from 'react';
 function UserMovements({detectedObjects, setMoving}) {
     const prev = useRef([]);
     const update = useRef(Date.now());
+    const last = useRef(false);
+    const MOVEMENT_THRESHOLD = 5;
 
     useEffect(() => {
         if(!detectedObjects || detectedObjects.length === 0) {
@@ -11,7 +13,7 @@ function UserMovements({detectedObjects, setMoving}) {
 
         const now = Date.now();
         const c = detectedObjects.map(o => {
-            const [x, w] = o.bbox;
+            const [x, , w] = o.bbox;
             return x + w / 2;
         });
 
@@ -21,13 +23,14 @@ function UserMovements({detectedObjects, setMoving}) {
             for(let i = 0; i < c.length; i++) {
                 td += Math.abs(c[i] - prev.current[i]);
             }
+
             const avg = td / c.length;
+            const move = avg > MOVEMENT_THRESHOLD;
 
-            const move = avg > 0;
-
-            if(now - update.current > 1000) {
+            if(now - update.current > 1000 && move !== lastState.current) {
                 setMoving(move);
                 update.current = now;
+                last.current = now;
             }
         }
         prev.current = c;
