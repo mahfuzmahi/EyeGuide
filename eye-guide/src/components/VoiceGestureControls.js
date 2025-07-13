@@ -8,7 +8,6 @@ recog.lang = 'eng-US';
 
 if (!SpeechRecognition) {
   console.warn("Speech recognition not supported.");
-  return null;
 }
 
 let run = false;
