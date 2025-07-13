@@ -14,8 +14,6 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
         const canvasWidth = canvasRef.current.width;
         const centerStart = canvasWidth / 3;
         const centerEnd = (canvasWidth * 2) / 3;
-        const leftEnd = canvasWidth / 3;
-        const rightEnd = (canvasWidth * 2) / 3;
 
         let bigObstacles = 0;
         let recomLeft = false;
@@ -88,14 +86,24 @@ function PathGuidance({detectedObjects, speak, canvasRef}) {
             speak("Keep on moving to the left until clear message");
         }
 
-        if(rightClear) {
-            zoneTime.current.left++;
-            if(zoneTime.current.right === 3) {
+        if (rightClear) {
+            zoneTime.current.right++;
+            if (zoneTime.current.right === 3) {
                 speak("Right side is clear to walk");
             }
         } else {
             zoneTime.current.right = 0;
         }
+
+        if (leftClear) {
+            zoneTime.current.left++;
+            if (zoneTime.current.left === 3) {
+                speak("Left side is clear to walk");
+            }
+        } else {
+            zoneTime.current.left = 0;
+        }
+
     }, [detectedObjects, speak, canvasRef]);
     return null;
 }
