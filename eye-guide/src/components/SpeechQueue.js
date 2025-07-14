@@ -83,4 +83,55 @@ class SpeechQueue {
 
         return common.length / Math.max(w1.length, w2.length); 
     }
+
+    addToQueue(text, priority = this.priorityLevels.INFO) {
+        if(!text || text.trim() === '') {
+            return;
+        }
+
+        if(this.isDuplicate(text, priority)) {
+            return;
+        }
+
+        const sItem = {
+            text: text.trim(),
+            priority: priority,
+            timestamp: Date.now(),
+            id: Math.random().toString(36).substr(2, 9)
+        };
+
+        this.recentMessage.set(text.toLowerCase().trim, Date.now());
+
+        const insertIndex = this.queue.findIndex(item => item.priority > priority);
+
+        if(insertIndex === -1) {
+            this.queue.push(sItem);
+        } else {
+            this.queue.splice(insertIndex, 0, sItem);
+        }
+
+        if(this.queue.length > 10) {
+            this.queue = this.queue.slice(0, 10);
+        }
+        
+        this.processQueue();
+    }
+
+    async processQueue() {
+        if(this.isSpeaking || this.queue.length === 0) {
+            return;
+        }
+
+        this.isSpeaking = true;
+
+        while(this.queue.length > 0) {
+            const sItem = this.queue.shift();
+            await this.speak(sItem);
+
+            if(this.queue.length > 0 && sItem.priority > this.priorityLevels.EMERGENCY) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+        this.isSpeaking = false;
+    }
 }   
