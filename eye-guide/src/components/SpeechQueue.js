@@ -75,4 +75,12 @@ class SpeechQueue {
             return false;
         }
     }
-}
+
+    calculateSimilarity(s1, s2) {
+        const w1 = s1.split(' ');
+        const w2 = s2.split(' ');
+        const common =  w1.filter(word => w2.includes(word));
+
+        return common.length / Math.max(w1.length, w2.length); 
+    }
+}   
