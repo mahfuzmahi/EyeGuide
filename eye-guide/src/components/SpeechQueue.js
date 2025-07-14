@@ -134,4 +134,56 @@ class SpeechQueue {
         }
         this.isSpeaking = false;
     }
+
+    async speak(sItem) {
+        return new Promise(resolve => {
+            try {
+                if(sItem.priority === this.priorityLevels.EMERGENCY) {
+                    window.speechSynthesis.cancel();
+                }
+
+                const utter = new SpeechSynthesisUtterance(sItem.text);
+
+                utter.rate = this.voiceSettings.rate;
+                utter.pitch = this.voiceSettings.pitch;
+                utter.volume = this.voiceSettings.volume;
+
+                switch(sItem.priority) {
+                    case this.priorityLevels.EMERGENCY:
+                        utter.rate = 0.8;
+                        utter.volume = 1.0;
+                        break;
+                    case this.priorityLevels.WARNING:
+                        utter.rate = 0.85;
+                        utter.volume = 0.9;
+                        break;
+                    case this.priorityLevels.INFO:
+                        utter.rate = 0.9;
+                        utter.rate = 0.8;
+                        break;
+                    case this.priorityLevels.DEBUG:
+                        utter.rate = 1.0;
+                        utter.volume = 0.7;
+                        break;
+                }
+
+                utter.onend = () => {
+                    this.currentUtterance = null;
+                    resolve();
+                }
+
+                utter.onerror = (error) => {
+                    console.error("SpeechSynth error", error);
+                    this.currentUtterance = null;
+                    resolve();
+                };
+
+                this.currentUtterance = utter;
+                window.speechSynthesis.speak(utter);
+            } catch (error) {
+                console.error("Error creating speech utterance", error);
+                resolve();
+            }
+        })
+    }
 }   
