@@ -184,6 +184,49 @@ class SpeechQueue {
                 console.error("Error creating speech utterance", error);
                 resolve();
             }
-        })
+        });
     }
-}   
+
+    clearQueue() {
+        this.queue = [];
+        
+        if(this.currentUtterance) {
+            window.speechSynthesis.cancel();
+            this.currentUtterance = null;
+        }
+        this.isSpeaking = false;
+    }
+
+    pause() {
+       if (this.currentUtterance) {
+           window.speechSynthesis.pause();
+       }
+   }
+
+   resume() {
+       if (this.currentUtterance) {
+           window.speechSynthesis.resume();
+       }
+   }
+
+   stop() {
+       window.speechSynthesis.cancel();
+       this.clearQueue();
+   }
+
+   mute() {
+       this.voiceSettings.volume = 0;
+   }
+
+   unmute() {
+       this.voiceSettings.volume = 1.0;
+   }
+
+   getStatus() {
+       return {
+            isSpeaking: this.isSpeaking,
+            queueLength: this.queue.length,
+            currentText: this.currentUtterance && this.currentUtterance.text
+       };
+    }
+}
