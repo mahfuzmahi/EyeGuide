@@ -8,7 +8,6 @@ import { speakObject } from "./components/SpeechQueue";
 import MemoryGuide from "./components/MemoryGuide";
 import SceneryGuesser from "./components/SceneryGuesser";
 import VoiceGestureControls from "./components/VoiceGestureControls";
-import UserMovements from "./components/UserMovements";
 
 function App() {
     const videoCam = useRef(null);
