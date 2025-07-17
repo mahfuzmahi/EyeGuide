@@ -10,7 +10,6 @@ class SpeechQueue {
             voice: null
         };
 
-
         this.priorityLevels = {
             EMERGENCY: 0,
             WARNING: 1,
@@ -35,7 +34,6 @@ class SpeechQueue {
         }
     }
 
-
     async initialVoice() {
         try {
             const voices = window.speechSynthesis.getVoices();
@@ -50,7 +48,6 @@ class SpeechQueue {
             console.warn("Could not initialize voice settings", error);
         }
     }
-
 
     isDuplicate(text, priority) {
         const now = Date.now();
@@ -140,8 +137,10 @@ class SpeechQueue {
             return [];
         }
     
+    
         const sentence = [];
         const set = new Set();
+    
     
         for(let i = 0; i < object.length; i++) {
             for(let j = i + 1; j < object.length; j++) {
@@ -201,7 +200,7 @@ class SpeechQueue {
     
     describeObject = (object) => {
         const [x, y, w, h] = object.bbox;
-        const distance = estimateDistance(w, h);
+        const distance = this.estimateDistance(w, h);
         const area = w * h;
         
         let description = `${object.class}`;
@@ -226,9 +225,7 @@ class SpeechQueue {
         return description;
     };
     
-    {speechQueue};
-    
     updateSpeechSettings = (settings) => {
-        speechQueue.updateVoiceSettings(settings);
+        this.updateVoiceSetting(settings);
     };
 }   
