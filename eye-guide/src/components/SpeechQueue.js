@@ -140,10 +140,8 @@ class SpeechQueue {
             return [];
         }
     
-    
         const sentence = [];
         const set = new Set();
-    
     
         for(let i = 0; i < object.length; i++) {
             for(let j = i + 1; j < object.length; j++) {
