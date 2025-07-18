@@ -4,7 +4,6 @@ import * as tf from "@tensorflow/tfjs";
 import CameraOverlay from "./components/CameraOverlay";
 import OverlayControls from "./components/OverlayControls";
 import PathGuidance from "./components/PathGuidance";
-import { speakObject } from "./components/SpeechQueue";
 import MemoryGuide from "./components/MemoryGuide";
 import SceneryGuesser from "./components/SceneryGuesser";
 import VoiceGestureControls from "./components/VoiceGestureControls";
@@ -28,21 +27,21 @@ function App() {
     const [load, setLoad] = useState(true);
 
     const speakObject = async (text) => {
-                if(isMuted || wordsUsed.current.has(text)) {
-                    return;
-                }
+        if(isMuted || wordsUsed.current.has(text)) {
+            return;
+        }
 
-                wordsUsed.current.add(text);
+        wordsUsed.current.add(text);
 
-                const synth = window.speechSynthesis;
-                const utter = new SpeechSynthesisUtterance(text);
-                utter.rate = 1;
-                synth.speak(utter);
+        const synth = window.speechSynthesis;
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 0.8;
+        synth.speak(utter);
 
-                setTimeout(() => {
-                    wordsUsed.current.delete(text);
-                }, 3000);
-            };
+        setTimeout(() => {
+            wordsUsed.current.delete(text);
+        }, 3000);
+    };
 
     const muteClick = () => {
         setMute(prev => !prev);
@@ -62,7 +61,7 @@ function App() {
                 try {
                     const camStream = await navigator.mediaDevices.getUserMedia({
                         video: {
-                            facingMode: {ideal: 'environment'} // access to the back camera
+                            facingMode: {ideal: 'environment'} 
                         },
                         audio: false
                     });
@@ -94,16 +93,16 @@ function App() {
                 }
 
                 if(sentenceParts.length > 0) {
-                        const fullSentence = "There is " + sentenceParts.join(", ");
-                        const utter = new SpeechSynthesisUtterance(fullSentence);
-                        utter.rate = 1;
-                        window.speechSynthesis.speak(utter);
+                    const fullSentence = "There is " + sentenceParts.join(", ");
+                    const utter = new SpeechSynthesisUtterance(fullSentence);
+                    utter.rate = 0.8;
+                    window.speechSynthesis.speak(utter);
 
-                        alreadySpoken.current = true;
+                    alreadySpoken.current = true;
 
-                        to.current = setTimeout(() => {
-                            alreadySpoken.current = false;
-                        }, 10000);
+                    to.current = setTimeout(() => {
+                        alreadySpoken.current = false;
+                    }, 10000);
                 }
             };
 
@@ -298,8 +297,15 @@ function App() {
             });
             
             startCam();
+
+            return () => {
+                clearInterval(checkReady);
+                if (to.current) {
+                    clearTimeout(to.current);
+                }
+            };
         }
-    }, [camOverlay]);
+    }, [camOverlay, isPaused]);
 
     return (
         <>
@@ -310,24 +316,26 @@ function App() {
                         position: 'fixed',
                         top: 0,
                         left: 0,
-                        backgroundColor: 'white',
+                        width: '100vw',
+                        height: '100vh',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         zIndex: 9999
                     }}
-                />
-
-                <div
-                    style = {{
-                        width: '60px',
-                        height: '60px',
-                        border: '6px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '50%',
-                        borderTop: '6px solid white',
-                        animation: 'spin 1s linear infinite'
-                    }}
-                />
+                >
+                    <div
+                        style = {{
+                            width: '60px',
+                            height: '60px',
+                            border: '6px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '50%',
+                            borderTop: '6px solid white',
+                            animation: 'spin 1s linear infinite'
+                        }}
+                    />
+                </div>
             </div>
         )}
 
@@ -368,6 +376,7 @@ function App() {
                 padding: '5px 10px',
                 borderRadius: '14px',
                 zIndex: 3,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
             }}
         >
             Objects: {countTotal}
