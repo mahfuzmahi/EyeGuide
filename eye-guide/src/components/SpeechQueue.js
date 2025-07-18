@@ -21,7 +21,7 @@ class SpeechQueue {
     }
 
     updateVoiceSetting(settings) {
-        if(settings && settings.speechRate()) {
+        if(settings && settings.speechRate) {
             this.voiceSettings.rate = settings.speechRate;
         }
 
@@ -57,20 +57,21 @@ class SpeechQueue {
             if(now - timestamp > 30000) {
                 this.recentMessage.delete(key);
             }
+        }
 
-            if(this.recentMessage.has(messageKey)) {
-                return true;
-            }
+        if(this.recentMessage.has(messageKey)) {
+            return true;
+        }
 
-            if(priority > this.priorityLevels.EMERGENCY) {
-                for(const [key] of this.recentMessage.entries()) {
-                    if(this.calculateSimilarity(messageKey, key) > 0.7) {
-                        return true;
-                    }
+        if(priority > this.priorityLevels.EMERGENCY) {
+            for(const [key] of this.recentMessage.entries()) {
+                if(this.calculateSimilarity(messageKey, key) > 0.7) {
+                    return true;
                 }
             }
-            return false;
         }
+        
+        return false;
     }
 
     calculateSimilarity(s1, s2) {
@@ -97,7 +98,7 @@ class SpeechQueue {
             id: Math.random().toString(36).substr(2, 9)
         };
 
-        this.recentMessage.set(text.toLowerCase().trim, Date.now());
+        this.recentMessage.set(text.toLowerCase().trim(), Date.now());
 
         const insertIndex = this.queue.findIndex(item => item.priority > priority);
 
@@ -114,6 +115,39 @@ class SpeechQueue {
         this.processQueue();
     }
 
+    async speak(sItem) {
+        return new Promise((resolve, reject) => {
+            try {
+                if (this.currentUtterance) {
+                    window.speechSynthesis.cancel();
+                }
+
+                const utterance = new SpeechSynthesisUtterance(sItem.text);
+                utterance.rate = this.voiceSettings.rate;
+                utterance.pitch = this.voiceSettings.pitch;
+                utterance.volume = this.voiceSettings.volume;
+                utterance.voice = this.voiceSettings.voice;
+
+                utterance.onend = () => {
+                    this.currentUtterance = null;
+                    resolve();
+                };
+
+                utterance.onerror = (error) => {
+                    this.currentUtterance = null;
+                    console.error('Speech synthesis error:', error);
+                    reject(error);
+                };
+
+                this.currentUtterance = utterance;
+                window.speechSynthesis.speak(utterance);
+            } catch (error) {
+                console.error('Error creating speech utterance:', error);
+                reject(error);
+            }
+        });
+    }
+
     async processQueue() {
         if(this.isSpeaking || this.queue.length === 0) {
             return;
@@ -123,10 +157,14 @@ class SpeechQueue {
 
         while(this.queue.length > 0) {
             const sItem = this.queue.shift();
-            await this.speak(sItem);
+            try {
+                await this.speak(sItem);
 
-            if(this.queue.length > 0 && sItem.priority > this.priorityLevels.EMERGENCY) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                if(this.queue.length > 0 && sItem.priority > this.priorityLevels.EMERGENCY) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            } catch (error) {
+                console.error('Error processing speech item:', error);
             }
         }
         this.isSpeaking = false;
@@ -137,10 +175,8 @@ class SpeechQueue {
             return [];
         }
     
-    
         const sentence = [];
         const set = new Set();
-    
     
         for(let i = 0; i < object.length; i++) {
             for(let j = i + 1; j < object.length; j++) {
@@ -157,7 +193,7 @@ class SpeechQueue {
                 const bCY = by + bh / 2;
     
                 const dx = Math.abs(aCX - bCX);
-                const dy = Math.abs(bCX - bCY);
+                const dy = Math.abs(aCY - bCY);
     
                 if (dx < 100 && dy < 50) {
                     const key = `${a.class}-next-${b.class}`;
@@ -228,4 +264,27 @@ class SpeechQueue {
     updateSpeechSettings = (settings) => {
         this.updateVoiceSetting(settings);
     };
-}   
+
+    stopSpeaking() {
+        if (this.currentUtterance) {
+            window.speechSynthesis.cancel();
+            this.currentUtterance = null;
+        }
+        this.isSpeaking = false;
+    }
+
+    clearQueue() {
+        this.queue = [];
+        this.stopSpeaking();
+    }
+
+    getQueueStatus() {
+        return {
+            isSpeaking: this.isSpeaking,
+            queueLength: this.queue.length,
+            currentUtterance: this.currentUtterance ? this.currentUtterance.text : null
+        };
+    }
+}
+
+export default SpeechQueue;   
